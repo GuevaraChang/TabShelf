@@ -1,0 +1,814 @@
+/* 智能标签侧边栏美化样式 - TabShelf扩展 */
+
+/* 基础变量定义 */
+:root {
+  /* 默认亮色主题 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f6f8fa;
+  --bg-tertiary: #f1f2f4;
+  --text-primary: #24292e;
+  --text-secondary: #586069;
+  --text-tertiary: #6a737d;
+  --border-color: #e1e4e8;
+  --accent-color: #0366d6;
+  --accent-hover: #0256c8;
+  --accent-active: #0044cc;
+  --hover-bg: #f6f8fa;
+  --pin-bg: #eaf5ea;
+  --pin-active-bg: #d4edda;
+  --pin-border: #28a745;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --error-color: #cb2431;
+  --error-bg: #ffeef0;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+}
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #252526;
+    --bg-tertiary: #333333;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-tertiary: #999999;
+    --border-color: #3e3e42;
+    --accent-color: #0078d4;
+    --accent-hover: #106ebe;
+    --accent-active: #005a9e;
+    --hover-bg: #2a2d2e;
+    --pin-bg: #1e3a24;
+    --pin-active-bg: #2c5738;
+    --pin-border: #3fb950;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --error-color: #f85149;
+    --error-bg: #461218;
+  }
+}
+
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100%;
+  user-select: none;
+}
+
+/* 侧边栏容器 */
+.sidebar-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid var(--border-color);
+}
+
+/* 侧边栏头部 */
+.sidebar-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+}
+
+.sidebar-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  background: linear-gradient(
+    90deg,
+    #4285F4 0%,
+    #EA4335 25%,
+    #FBBC04 50%,
+    #34A853 75%,
+    #4285F4 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  text-align: center;
+  animation: gradient 8s ease infinite;
+}
+
+/* 渐变动画定义 */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 搜索容器 */
+.search-container {
+  position: relative;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.search-input-wrapper:focus-within {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+}
+
+#search-input {
+  width: 100%;
+  padding: var(--spacing-sm) calc(var(--spacing-md) + 20px) var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  right: var(--spacing-sm);
+  color: var(--text-tertiary);
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+}
+
+#search-input::placeholder {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* 新增标签按钮 */
+#new-tab-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: #4285F4;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+#new-tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: all 0.3s ease;
+}
+
+#new-tab-btn:hover::before {
+  left: 100%;
+}
+
+#new-tab-btn:hover {
+  background-color: #3367D6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+#new-tab-btn:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+}
+
+/* 固定标签标题 */
+.pinned-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: var(--spacing-lg) var(--spacing-md) var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-tertiary);
+}
+
+/* 标签列表容器 */
+.tabs-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm) 0;
+}
+
+/* 标签分组容器 */
+.custom-pinned-tabs,
+.normal-tabs-container {
+  margin-bottom: var(--spacing-md);
+}
+
+/* 标签项通用样式 */
+.tab-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: 2px var(--spacing-sm);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  min-height: 48px;
+  background-color: var(--bg-primary);
+  border: 1px solid transparent;
+}
+
+.tab-item:hover {
+  background-color: var(--hover-bg);
+  transform: translateX(2px);
+}
+
+/* 活动标签样式 */
+.tab-item.active {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-active);
+}
+
+/* 修复固定标签被选中时的字体颜色问题 */
+.tab-item.pinned-tab.active {
+  color: white;
+  background-color: var(--accent-color);
+  border-color: var(--accent-active);
+}
+
+/* 确保固定标签的标题在选中状态下仍然可读 */
+.tab-item.pinned-tab.active .tab-title {
+  color: white;
+  font-weight: 600; /* 稍微加粗以提高可读性 */
+}
+
+.tab-item.active .tab-url {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 固定标签样式 */
+.tab-item.pinned-tab {
+  background-color: var(--pin-bg);
+  border-left: 3px solid var(--pin-border);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.tab-item.pinned-tab:hover {
+  background-color: var(--pin-active-bg);
+}
+
+/* 固定且活动的标签样式 - 保持文字可读 */
+.tab-item.pinned-tab.active {
+  background-color: var(--pin-active-bg);
+  color: var(--text-primary); /* 确保文字颜色不是白色 */
+  border-left-color: var(--accent-color);
+  border-color: transparent;
+}
+
+.tab-item.pinned-tab.active .tab-url {
+  color: var(--text-secondary); /* 确保URL文字颜色可读 */
+}
+
+.tab-item.pinned-tab.active .tab-index {
+  color: var(--text-secondary); /* 确保序号文字颜色可读 */
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+#settings-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+#settings-btn:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* 设置面板样式 */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-panel.hidden {
+  display: none;
+}
+
+.settings-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.settings-content {
+  position: relative;
+  background-color: var(--bg-primary);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.settings-body {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.settings-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.setting-item {
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.setting-item input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.setting-item input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.1);
+}
+
+.setting-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.setting-hint a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.setting-hint a:hover {
+  text-decoration: underline;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.save-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+  background-color: #0277bd;
+}
+
+/* 拖拽相关样式 */
+.tab-item.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  transform: scale(1.02) rotate(1deg);
+  box-shadow: var(--shadow-hover);
+  z-index: 10;
+}
+
+.tab-item.drag-over {
+  background-color: rgba(3, 102, 214, 0.1) !important;
+  transform: translateY(4px);
+  border: 1px dashed var(--accent-color);
+  position: relative;
+}
+
+.tab-item.drag-over::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--accent-color);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+/* 标签序号 */
+.tab-index {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-right: var(--spacing-sm);
+  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.tab-item.active .tab-index {
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 1;
+}
+
+/* 标签图标 */
+.tab-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: var(--spacing-sm);
+  border-radius: 3px;
+  flex-shrink: 0;
+  background-color: var(--bg-tertiary);
+}
+
+/* 标签内容容器 */
+.tab-content {
+  flex: 1;
+  min-width: 0;
+  margin-right: var(--spacing-sm);
+}
+
+/* 标题容器 - 包含标题和按钮 */
+.tab-title-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-bottom: 2px;
+}
+
+/* 标签标题 */
+.tab-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+  cursor: text;
+}
+
+.tab-title:hover {
+  color: var(--accent-color);
+}
+
+.tab-item.active .tab-title:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* 标签标题编辑样式 */
+.tab-title-edit {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--accent-color);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  flex: 1;
+  min-width: 100px;
+  transition: border-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-title-edit:focus {
+  border-color: var(--accent-active);
+  box-shadow: 0 0 0 2px rgba(3, 102, 214, 0.2);
+  white-space: normal;
+  overflow: auto;
+  text-overflow: clip;
+}
+
+.tab-item.active .tab-title-edit {
+  background: var(--accent-active);
+  color: white;
+  border-color: white;
+}
+
+.tab-item.pinned-tab .tab-title {
+  font-weight: 600;
+}
+
+/* 标签URL */
+.tab-url {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 功能按钮样式 - 统一设计 */
+.edit-btn, .pin-btn, .close-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
+  color: var(--text-secondary);
+}
+
+.tab-item.active .edit-btn,
+.tab-item.active .pin-btn,
+.tab-item.active .close-btn {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.edit-btn:hover, .pin-btn:hover, .close-btn:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.tab-item.active .edit-btn:hover,
+.tab-item.active .pin-btn:hover,
+.tab-item.active .close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.edit-btn {
+  color: var(--text-secondary);
+}
+
+.pin-btn {
+  color: var(--pin-border);
+}
+
+.close-btn {
+  color: var(--text-tertiary);
+}
+
+/* 加载状态样式 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  color: var(--text-tertiary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.loading::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-color);
+  border-top: 2px solid var(--accent-color);
+  border-radius: 50%;
+  margin-right: var(--spacing-sm);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 无结果提示 */
+.no-results {
+  text-align: center;
+  color: var(--text-tertiary);
+  font-style: italic;
+  padding: var(--spacing-xl);
+  font-size: 14px;
+}
+
+/* 错误消息样式 */
+.error-message {
+  text-align: center;
+  color: var(--error-color);
+  background-color: var(--error-bg);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  margin: var(--spacing-md);
+  font-size: 14px;
+}
+
+/* 错误标签样式 */
+.tab-item.error {
+  background-color: var(--error-bg);
+  border-left: 3px solid var(--error-color);
+}
+
+/* 滚动条美化 */
+.tabs-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tabs-container::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.tabs-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+.tabs-container::-webkit-scrollbar-corner {
+  background: var(--bg-secondary);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .sidebar-header {
+    padding: var(--spacing-md);
+  }
+  
+  .sidebar-header h1 {
+    font-size: 24px;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .tab-item {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    margin: 1px var(--spacing-xs);
+    min-height: 44px;
+  }
+  
+  .tab-title {
+    font-size: 13px;
+  }
+  
+  .tab-url {
+    font-size: 11px;
+  }
+  
+  .edit-btn, .pin-btn, .close-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+}
+
+/* 高对比度支持 */
+@media (prefers-contrast: high) {
+  .tab-item.active {
+    background-color: var(--accent-color);
+    color: white;
+    border: 2px solid var(--accent-color);
+  }
+  
+  .tab-item.pinned-tab {
+    border-left: 4px solid var(--pin-border);
+  }
+}
+
+/* 减少动画偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 确保暗色主题下的搜索图标可见性 */
+@media (prefers-color-scheme: dark) {
+  .search-icon {
+    color: var(--text-tertiary);
+  }
+}
